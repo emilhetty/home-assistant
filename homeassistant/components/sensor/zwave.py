@@ -68,6 +68,9 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
 
     elif value.command_class == zwave.COMMAND_CLASS_ALARM:
         add_devices([ZWaveAlarmSensor(value)])
+        
+    elif value.command_class == zwave.COMMAND_CLASS_CONFIGURATION:
+        add_devices([ZwaveGarageDoor(value)])
 
 
 class ZWaveSensor(zwave.ZWaveDeviceEntity, Entity):
@@ -138,5 +141,19 @@ class ZWaveAlarmSensor(ZWaveSensor):
 
     COMMAND_CLASS_ALARM is what we get here.
     """
+
+class ZwaveGarageDoor(ZWaveSensor):
+    """Representation of a garage door controller Z-Wave sensor."""
+
+    @property
+    def state(self):
+        """Return the state of the sensor."""
+                for value in self._node.get_values(
+                class_id=COMMAND_CLASS_CONFIGURATION).values():
+            if value.command_class == 112 and value.index == 45:
+        value = (self._value.data / 10)
+
+        return value
+
 
     pass
