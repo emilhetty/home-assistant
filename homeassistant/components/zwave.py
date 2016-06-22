@@ -1,6 +1,5 @@
 """
 Support for Z-Wave.
-
 For more details about this component, please refer to the documentation at
 https://home-assistant.io/components/zwave/
 """
@@ -42,6 +41,7 @@ EVENT_SCENE_ACTIVATED = "zwave.scene_activated"
 COMMAND_CLASS_SWITCH_MULTILEVEL = 38
 COMMAND_CLASS_DOOR_LOCK = 98
 COMMAND_CLASS_SWITCH_BINARY = 37
+COMMAND_CLASS_ENTRY_CONTROL = 40
 COMMAND_CLASS_SENSOR_BINARY = 48
 COMMAND_CLASS_SENSOR_MULTILEVEL = 49
 COMMAND_CLASS_METER = 50
@@ -51,11 +51,14 @@ COMMAND_CLASS_THERMOSTAT_SETPOINT = 67  # 0x43
 COMMAND_CLASS_THERMOSTAT_FAN_MODE = 68  # 0x44
 
 SPECIFIC_DEVICE_CLASS_WHATEVER = None
+SPECIFIC_DEVICE_CLASS_NOT_USED = 0
 SPECIFIC_DEVICE_CLASS_MULTILEVEL_POWER_SWITCH = 1
 SPECIFIC_DEVICE_CLASS_MULTIPOSITION_MOTOR = 3
 SPECIFIC_DEVICE_CLASS_MULTILEVEL_SCENE = 4
+SPECIFIC_DEVICE_CLASS_SECURE_DOOR = 5
 SPECIFIC_DEVICE_CLASS_MOTOR_CONTROL_CLASS_A = 5
 SPECIFIC_DEVICE_CLASS_MOTOR_CONTROL_CLASS_B = 6
+SPECIFIC_DEVICE_CLASS_SECURE_BARRIER_ADD_ON = 7
 SPECIFIC_DEVICE_CLASS_MOTOR_CONTROL_CLASS_C = 7
 
 GENRE_WHATEVER = None
@@ -116,6 +119,12 @@ DISCOVERY_COMPONENTS = [
       SPECIFIC_DEVICE_CLASS_MOTOR_CONTROL_CLASS_B,
       SPECIFIC_DEVICE_CLASS_MOTOR_CONTROL_CLASS_C,
       SPECIFIC_DEVICE_CLASS_MULTIPOSITION_MOTOR]),
+    ('garagedoor',
+     [COMMAND_CLASS_ENTRY_CONTROL],
+     TYPE_WHATEVER,
+     GENRE_USER,
+     [SPECIFIC_DEVICE_CLASS_SECURE_BARRIER_ADD_ON,
+      SPECIFIC_DEVICE_CLASS_SECURE_DOOR])
 ]
 
 
@@ -149,7 +158,6 @@ def _value_name(value):
 
 def _object_id(value):
     """Return the object_id of the device value.
-
     The object_id contains node_id and value instance id
     to not collide with other entity_ids.
     """
@@ -191,7 +199,6 @@ def get_config_value(node, value_index):
 # pylint: disable=R0914
 def setup(hass, config):
     """Setup Z-Wave.
-
     Will automatically load components to support devices found on the network.
     """
     # pylint: disable=global-statement, import-error
@@ -393,7 +400,6 @@ class ZWaveDeviceEntity:
 
     def _object_id(self):
         """Return the object_id of the device value.
-
         The object_id contains node_id and value instance id to not collide
         with other entity_ids.
         """
