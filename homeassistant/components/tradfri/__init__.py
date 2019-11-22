@@ -126,7 +126,7 @@ async def async_setup_entry(hass, entry):
         connections=set(),
         identifiers={(DOMAIN, entry.data[CONF_GATEWAY_ID])},
         manufacturer=ATTR_TRADFRI_MANUFACTURER,
-        name=ATTR_TRADFRI_GATEWAY,
+        name=ATTR_TRADFRI_GATEWAY, CONF_GATEWAY_ID,
         # They just have 1 gateway model. Type is not exposed yet.
         model=ATTR_TRADFRI_GATEWAY_MODEL,
         sw_version=gateway_info.firmware_version,
